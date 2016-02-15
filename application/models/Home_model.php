@@ -27,6 +27,19 @@ class Home_model extends CI_Model{
 
 	}
 
+   public function add_comment($dis_id,$comment,$comment_by){
+      $comment=array(
+         'dis_type_id'=>$dis_id,
+         'comment_id'=>mt_rand(1000,9999999),
+         'message'=>$comment,
+         'date_comment'=>date('Y-m-d'),
+         'comment_by'=>$comment_by
+         );
+
+      return $this->db->insert('comments',$comment);
+   }
+   
+
 	public function addvolunteer($name,$lastname,$mi,$birth,$age,$cvstat,$religon,$nationality,$gender,$contact,$email,$profession,$username,$password,$reg_type){
 		$rand_id = mt_rand(1000,9999999);
 
@@ -84,6 +97,15 @@ class Home_model extends CI_Model{
 		}
 	}
 
+   public function fetchComments($dist_id){
+      $query = $this->db->select("*");
+      $query = $this->db->from("comments");
+      $query = $this->db->join("user","user.user_id = comments.comment_by");
+      $query = $this->db->where("comments.dis_type_id",$dist_id);
+      $query = $this->db->get();
+      return $query->result_array();
+   }
+
    public function fetchUserId($username){
    		
    		$query = $this->db->query("SELECT user_id from user_settings where user_username='$username'");
@@ -103,12 +125,32 @@ class Home_model extends CI_Model{
    		}
    }
 
+
+
 	public function get_disasterlists(){
 		$query = $this->db->order_by("type","ASC");
 		$query = $this->db->get("disaster_type");
 		return $query->result_array();
 	}
    
+   public function getProfile($userID){
+      $query = $this->db->where("user_id",$userID);
+      $query = $this->db->get("user");
+
+      return $query->result_array();
+
+   }
+
+   public function getNotifications($userId){
+
+      $query = $this->db->select("*");
+      $query = $this->db->from("notification");
+      $query = $this->db->where("sent_to",$userId);
+      $query = $this->db->join("notification_type","notification_type.notify_id = notification.notify_id");
+      $query = $this->db->get();
+      return $query->result_array();
+   }
+
    public function hasJoinedinOrg($userId){
    		
    			$this->db->where("organization_members.user_id",$userId);
@@ -141,6 +183,9 @@ class Home_model extends CI_Model{
 
    		return $query->result_array();
    }
+
+ 
+
    public function submit_donation($sponsorid,$amount,$recipient_org,$disaster_type){
    		$donation = array(
    			'sponsor_id'=>mt_rand(1000,9999999),
@@ -193,6 +238,30 @@ class Home_model extends CI_Model{
 
    	return $query->result_array();
 
+   }
+
+   public function update_loginaccount($userid,$username,$password){
+      $account =array('user_username'=>$username,'user_userpassword'=>$password);
+      $this->db->where("user_id",$userid);
+      $this->db->update("user_settings",$account);
+   }
+
+   public function update_profile($id,$firstname,$lastname,$number,$email,$username){
+      $profile=array('user_firstname'=>$firstname,
+         'user_lastname'=>$lastname,
+         'user_contact_no'=>$number,
+         'user_email_add'=>$email,
+         );
+      $this->db->where("user_id",$id);
+      return $this->db->update("user",$profile);
+
+
+   }
+
+    public function update_user($id,$newUser){
+      $user = array('user_username'=>$newUser);
+      $this->db->where('user_settings.user_id',$id);
+      $this->db->update('user_settings',$user);
    }
 
 }

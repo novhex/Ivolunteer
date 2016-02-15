@@ -1,7 +1,9 @@
 
-      <div class="jumbotron">
+      
+        <div class="col-md-12"><center><img src="<?php echo base_url('img/logo.jpg');?>"></center></div>
           <h1 style="text-align:center;"><i class="fa fa-search"></i> We're searching for volunteers </h1>
-      </div>
+
+   
          
 <div class="container">
   

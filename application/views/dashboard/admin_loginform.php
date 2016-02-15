@@ -1,9 +1,12 @@
+ <div class="col-md-12"><center><img src="<?php echo base_url('img/logo.jpg');?>"></center></div>
+          <h1 style="text-align:center;"><i class="fa fa-lock"></i> Admin Login </h1>
+
 <div class="container" style="margin-top:70px;">
 	<div class="row">
 	<div class="col-md-4"></div>
 		<div class="col-md-4">
 				<div class="well">
-					<h1> Admin Login </h1>
+				
 					<hr>
 					<?php
 						if($this->session->userdata('auth-error')!=''){

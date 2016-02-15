@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="<?php echo base_url();?>">iVolunteer</a>
+          <a class="navbar-brand" href="<?php echo base_url();?>"><img style="max-width:150px; margin-top: -20px;" src="<?php echo base_url('img/logo.jpg');?>"></a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -48,22 +48,33 @@
 
            <?php if($this->session->userdata('userType')=='volunteer') {?>
 
-            
+             <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-list"></i> Menu <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+            <li><a href="<?php echo base_url('index.php/home/editprofile');?>"><i class="fa fa-pencil"></i> Edit Profile</a></li>
             <li><a href="<?php echo base_url('index.php/home/dashboard');?>"><i class="fa fa-dashboard"></i> My Dashboard</a></li>
              <li><a href="<?php echo base_url('index.php/home/myorganization')."/".$this->session->userdata('userId');?>"><i class="fa fa-users"></i> My Organization</a></li>
-            <li><a href="#"><i class="fa fa-comment"></i> My Notifications</a></li>
+            
+            <li><a href="<?php echo base_url('index.php/home/notifications'); ?>"><i class="fa fa-comment"></i> My Notifications</a></li>
                
               <li><a href="<?php echo base_url('index.php/home/logout');?>"><i class="fa fa-unlock"></i> Logout <?php echo $this->session->userdata('userName');?></a></li>
+            </ul>
             <?php }?>
 
             <?php if($this->session->userdata('userType')=='sponsor') {?>
-           
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-list"></i> Menu <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+
              <li><a href="<?php echo base_url('index.php/home/dashboard');?>"><i class="fa fa-dashboard"></i> My Dashboard</a></li>
+             <li><a href="<?php echo base_url('index.php/home/notifications'); ?>"><i class="fa fa-comment"></i> My Notifications</a></li>
+              <li><a href="<?php echo base_url('index.php/home/editprofile');?>"><i class="fa fa-pencil"></i> Edit Profile</a></li>
              <li><a href="<?php echo base_url('index.php/home/donate');?>"><i class="fa fa-money"></i> Donate In An Organization</a></li>
              <li><a href="<?php echo base_url('index.php/home/mydonation');?>"><i class="fa fa-list-alt"></i> My Donations</a></li>
             
 
              <li><a href="<?php echo base_url('index.php/home/logout');?>"><i class="fa fa-unlock"></i> Logout <?php echo $this->session->userdata('userName');?></a></li>
+            </ul>
             <?php }?>
 
             <?php }
@@ -72,8 +83,8 @@
 
 
        
-              <li><a href="<?php echo base_url('index.php/home/register/')."?type=volunteer";?>"><i class="fa fa-users"></i> Register as Volunteer</a></li>
-              <li><a href="<?php echo base_url('index.php/home/register/')."?type=sponsor";?>"><i class="fa fa-money"></i> Register as Sponsor</a></li>
+              <li><a href="<?php echo base_url('index.php/home/register/');?>"><i class="fa fa-users"></i> Register</a></li>
+              
          
  
 

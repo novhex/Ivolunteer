@@ -27,11 +27,27 @@ class Home extends CI_Controller{
 
 	}
 
+	public function postcomment(){
+
+		if($this->session->userdata('userName')!='' && $this->session->userdata('userId')!=''){
+			$dis_id=$this->input->post('dis_id');
+			$comment=$this->input->post('comment');
+
+			$response =$this->home_model->add_comment($dis_id,$comment,$this->session->userdata('userId'));
+
+			echo $response;
+
+		}else{
+			redirect(base_url('index.php/home/login'));
+		}
+
+	}
 	
 	public function dashboard(){
 
 		if($this->session->userdata('userName')!='' && $this->session->userdata('userId')!=''){
 		$this->data['page_title']= "Dashboard &raquo; iVolunteer";
+		$this->data['disasters'] = $this->home_model->get_disasterlists();
 		$this->load->view('home/tpl/page_header',$this->data);
 		$this->load->view('home/ivo_dashboardmain');
 		$this->load->view('home/tpl/page_footer');
@@ -39,6 +55,8 @@ class Home extends CI_Controller{
 			redirect(base_url('index.php/home/login'));
 		}
 	}
+
+
 
 	public function donate(){
 		if($this->session->userdata('userName')!='' && $this->session->userdata('userId')!='' && $this->session->userdata('userType')!=''){
@@ -54,6 +72,61 @@ class Home extends CI_Controller{
 
 	}
 
+
+	public function editprofile(){
+
+		if($this->session->userdata('userName')!='' && $this->session->userdata('userId')!=''){
+
+		$this->form_validation->set_rules('txtfname','First Name','trim|required|max_length[30]');
+		$this->form_validation->set_rules('txtlname','Last Name','trim|required|max_length[30]');
+		$this->form_validation->set_rules('txtcontact','Contact No.','trim|required|max_length[30]');
+		$this->form_validation->set_rules('txtemail','Email','trim|required|max_length[255]');
+		$this->form_validation->set_rules('txtuser','Username','trim|required|min_length[6]|max_length[30]');
+
+		if(strlen($this->input->post('txtpassword'))>0){
+			$this->form_validation->set_rules('txtpassword','Password','trim|required|min_length[6]|max_length[15]');
+			$this->form_validation->set_rules('txtpasswordcf','Password Confirmation','trim|required|matches[txtpassword]');
+		}
+
+		if($this->form_validation->run()==FALSE){
+		$this->data['page_title']= "Dashboard &raquo; iVolunteer";
+		$this->data['profile']=$this->home_model->getProfile($this->session->userdata('userId'));
+		$this->load->view('home/tpl/page_header',$this->data);
+		$this->load->view('home/ivo_editprofile',$this->data);
+		$this->load->view('home/tpl/page_footer');
+		}else{
+				$response = $this->home_model->update_profile($this->session->userdata('userId'),$this->input->post('txtfname'),$this->input->post('txtlname'),$this->input->post('txtcontact'),$this->input->post('txtemail'),$this->input->post('txtuser'));
+			
+			if(strlen($this->input->post('txtpassword'))>0){
+				$response2 = $this->home_model->update_loginaccount($this->session->userdata('userId'),$this->input->post('txtuser'),$this->input->post('txtpassword'));
+			}
+
+			if(strlen($this->input->post('txtuser'))>0){
+				$response3 = $this->home_model->update_user($this->session->userdata('userId'),$this->input->post('txtuser'));
+			}
+
+			if($response==1){
+				redirect(base_url('index.php/home/dashboard'));
+			}
+
+		}
+
+		}else{
+			redirect(base_url('index.php/home/login'));
+		}	
+	}
+
+
+	public function getcomments(){
+		if($this->session->userdata('userName')!='' && $this->session->userdata('userId')!=''){
+			$this->data['comments'] = $this->home_model->fetchComments($this->input->get('dist_id'));
+			$this->data['accesstype']='ordinary';
+			$this->load->view('home/ivo_ajaxcomments',$this->data);
+			
+		}else{
+			redirect(base_url('index.php/home/login'));
+		}
+	}
 
 
 	public function login(){
@@ -113,9 +186,12 @@ class Home extends CI_Controller{
 			$this->data['page_title']= "My Organization &raquo; iVolunteer";
 			$this->data['user_org_array']=$this->home_model->volunteerorginfo($userId);
 			
+			if($this->data['user_org_array']){
 			$this->data['org_details']= $this->home_model->viewOrganizationFullInfo($this->data['user_org_array'][0]['org_id']);
 			$this->data['org_members']=$this->home_model->viewOrgMembers($this->data['user_org_array'][0]['org_id']);
-			
+			}else{
+				
+			}
 			
 			$this->load->view('home/tpl/page_header',$this->data);
 			$this->load->view('home/ivo_volunteerorg',$this->data);
@@ -138,6 +214,20 @@ public function mydonation(){
 			redirect(base_url('index.php/home/login'));
 		}
 	}
+
+public function notifications(){
+
+		if($this->session->userdata('userName')!='' && $this->session->userdata('userId')!='' && $this->session->userdata('userType')!=''){
+		$this->data['page_title']= "My Notifications &raquo; iVolunteer";
+		$this->data['notifications']=$this->home_model->getNotifications($this->session->userdata('userId'));
+		$this->load->view('home/tpl/page_header',$this->data);
+		$this->load->view('home/ivo_notifications',$this->data);
+		$this->load->view('home/tpl/page_footer');
+
+		}else{
+			redirect(base_url('index.php/home/login'));
+		}
+}
 
 
 	public function organizationlists(){
@@ -163,13 +253,18 @@ public function mydonation(){
 		if($this->session->userdata('userName')!=''){
 			redirect(base_url('index.php/home/dashboard'));
 		}
-		$data['type']=$this->input->get('type');
 
 		$this->form_rules=array(array(
 				'field'=>'txtfname',
 				'label'=>'First Name',
 				'rules'=>'trim|required|min_length[2]|max_length[30]'
 			),
+
+			array(
+				'field'=>'reg_type',
+				'label'=>'Registration Type',
+				'rules'=>'trim|required'
+				),
 			array(
 				'field'=>'txtlname',
 				'label'=>'Last Name',

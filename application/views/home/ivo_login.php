@@ -1,7 +1,7 @@
 
-      <div class="jumbotron">
+ <div class="col-md-12"><center><img src="<?php echo base_url('img/logo.jpg');?>"></center></div>
           <h1 style="text-align:center;"><i class="fa fa-search"></i> We're searching for volunteers </h1>
-      </div>
+
 <div class="container" style="margin-top:90px;">
 	<div class="row">
 	<div class="col-md-4"></div>
@@ -26,7 +26,7 @@
 			<label></label>
 			<input type="password" value="" name="txtPass" id="txtPass" placeholder="Password" class="form-control">
 			<hr>
-			<button type="submit" class="btn btn-primary" id="btnLogin" name="btnLogin">Login</button>
+			<button type="submit" class="btn btn-primary" id="btnLogin" name="btnLogin"><i class="fa fa-lock"></i> Login</button>
 			</form>
 		</div>
 		</div>

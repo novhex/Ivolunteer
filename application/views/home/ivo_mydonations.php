@@ -38,6 +38,10 @@
 		$(document).ready(function(){
 		$("#tbl_mdonations").DataTable();
 
+		<?php if($this->session->flashdata('donation_ok')!=''){?>
+			bootbox.alert("You have successfully donated in an Organization");
+		<?php }?>
+
 	
 	});
 

@@ -1,15 +1,22 @@
- 
-      <div class="jumbotron">
+
+ <div class="col-md-12"><center><img src="<?php echo base_url('img/logo.jpg');?>"></center></div>
           <h1 style="text-align:center;"><i class="fa fa-search"></i> We're searching for volunteers </h1>
-      </div>
+
 <div class="container" style="margin-top:50px;">
 	<div class="row">
   <div class="col-md-4"></div>
 		<div class="col-md-4 well" id="register">
-        <h3 style="text-align:center;"> <?php echo ucfirst($type); ?> Registration Form </h3>
+        <h3 style="text-align:center;">  Registration Form </h3>
       
        <form action="<?php echo base_url('index.php/home/register');?>" method="POST" accept-charset="utf-8">
-       <input type="hidden" name="reg_type" value="<?php echo $this->input->get('type'); ?>" />
+      
+       <label><?php echo form_error('reg_type'); ?></label>
+       <select name="reg_type" class="form-control">
+       <option value="">-Select Registration Type-</option>
+         <option value="volunteer">As Volunteer</option>
+         <option value="sponsor">As Sponsor</option>
+       </select>
+
              	 <label><?php echo form_error('txtUsername'); ?></label>   
       	<input type="text" name="txtUsername" id="txtUsername" class="form-control" value="<?php echo set_value('txtUsername');?>" placeholder="Username" />
 
